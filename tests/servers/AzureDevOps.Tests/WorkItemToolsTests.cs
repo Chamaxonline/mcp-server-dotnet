@@ -22,7 +22,7 @@ public sealed class WorkItemToolsTests
     private static IOptions<AzureDevOpsOptions> CreateOptions(
         string org = "testorg",
         string project = "testproject") =>
-        Options.Create(new AzureDevOpsOptions
+        Microsoft.Extensions.Options.Options.Create(new AzureDevOpsOptions
         {
             Organization = org,
             Project = project,
@@ -30,7 +30,7 @@ public sealed class WorkItemToolsTests
         });
 
     [Fact]
-    public void UpdateWorkItemAsync_ReturnsFailure_WhenNoFieldsProvided()
+    public async Task UpdateWorkItemAsync_ReturnsFailure_WhenNoFieldsProvided()
     {
         // Arrange — build a tool instance with a no-op HTTP client stub.
         var httpClient = new HttpClient(new StubHttpMessageHandler(
@@ -49,8 +49,7 @@ public sealed class WorkItemToolsTests
             NullLogger<WorkItemTools>.Instance);
 
         // Act
-        var jsonTask = tools.UpdateWorkItemAsync(id: 1);
-        var json = jsonTask.GetAwaiter().GetResult();
+        var json = await tools.UpdateWorkItemAsync(id: 1);
 
         // Assert
         using var doc = JsonDocument.Parse(json);

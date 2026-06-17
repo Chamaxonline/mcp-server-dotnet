@@ -198,22 +198,18 @@ public sealed class MailTools
                     CcRecipients = ParseRecipients(ccRecipients),
                 };
 
-                var requestBody = new Microsoft.Graph.Me.SendMail.SendMailPostRequestBody
-                {
-                    Message = message,
-                    SaveToSentItems = true,
-                };
-
                 _logger.LogInformation(
                     "Sending mail '{Subject}' to {Recipients} as user {User}", subject, toRecipients, uid);
 
                 if (uid == "me")
                 {
-                    await _graph.Me.SendMail.PostAsync(requestBody, cancellationToken: cancellationToken);
+                    var req = new Microsoft.Graph.Me.SendMail.SendMailPostRequestBody { Message = message, SaveToSentItems = true };
+                    await _graph.Me.SendMail.PostAsync(req, cancellationToken: cancellationToken);
                 }
                 else
                 {
-                    await _graph.Users[uid].SendMail.PostAsync(requestBody, cancellationToken: cancellationToken);
+                    var req = new Microsoft.Graph.Users.Item.SendMail.SendMailPostRequestBody { Message = message, SaveToSentItems = true };
+                    await _graph.Users[uid].SendMail.PostAsync(req, cancellationToken: cancellationToken);
                 }
 
                 return McpToolResult.Success<object>(new { sent = true, subject, to = toRecipients });

@@ -16,8 +16,7 @@ try
 {
     var builder = Host.CreateApplicationBuilder(args);
 
-    builder.Logging.ClearProviders();
-    builder.Logging.AddSerilog(dispose: false);
+    builder.Services.AddSerilog(Log.Logger, dispose: true);
 
     builder.Services
         .AddMcpServer()

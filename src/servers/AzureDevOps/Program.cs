@@ -17,8 +17,7 @@ try
     var builder = Host.CreateApplicationBuilder(args);
 
     // Replace default Microsoft logging with Serilog writing to stderr.
-    builder.Logging.ClearProviders();
-    builder.Logging.AddSerilog(dispose: false);
+    builder.Services.AddSerilog(Log.Logger, dispose: true);
 
     // Register MCP server with STDIO transport and all Azure DevOps tools.
     builder.Services

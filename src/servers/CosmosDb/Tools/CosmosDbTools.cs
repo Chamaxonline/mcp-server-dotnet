@@ -74,7 +74,7 @@ public sealed class CosmosDbTools
                     }
                 }
 
-                return McpToolResult.Success(new
+                return McpToolResult.Success<object>(new
                 {
                     count = items.Count,
                     requestUnitsConsumed = Math.Round(totalRu, 2),

@@ -1,6 +1,7 @@
 using Azure.Core;
 using Azure.Identity;
 using McpServerDotnet.Core.Logging;
+using McpServerDotnet.Core.Middleware;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ModelContextProtocol.Server;

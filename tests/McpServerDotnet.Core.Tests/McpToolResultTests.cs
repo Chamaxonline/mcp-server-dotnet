@@ -56,7 +56,10 @@ public sealed class McpToolResultTests
     [Fact]
     public void ToJson_SerializesFailureResult()
     {
-        var result = McpToolResult.Failure<int>("not found", "NotFound");
+        // Use a reference type (object) — the real-world usage in all tools.
+        // For unconstrained T, T? compiles to T at runtime for value types,
+        // so default(int) is 0 (not null) and WhenWritingNull won't omit it.
+        var result = McpToolResult.Failure<object>("not found", "NotFound");
         var json = result.ToJson();
 
         using var doc = JsonDocument.Parse(json);

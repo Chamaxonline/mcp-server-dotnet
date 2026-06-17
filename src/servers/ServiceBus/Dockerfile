@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 COPY mcp-server-dotnet.sln ./
@@ -16,7 +16,7 @@ RUN dotnet publish src/servers/ServiceBus/ServiceBus.csproj \
     --output /app/publish \
     -p:UseAppHost=false
 
-FROM mcr.microsoft.com/dotnet/runtime:9.0 AS runtime
+FROM mcr.microsoft.com/dotnet/runtime:10.0 AS runtime
 WORKDIR /app
 
 RUN addgroup --system mcp && adduser --system --ingroup mcp mcp

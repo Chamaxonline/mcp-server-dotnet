@@ -1,5 +1,5 @@
 # ── Build stage ─────────────────────────────────────────────────────────────────
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # Copy solution and project files first to leverage Docker layer caching.
@@ -20,7 +20,7 @@ RUN dotnet publish src/servers/AzureDevOps/AzureDevOps.csproj \
     -p:UseAppHost=false
 
 # ── Runtime stage ────────────────────────────────────────────────────────────────
-FROM mcr.microsoft.com/dotnet/runtime:9.0 AS runtime
+FROM mcr.microsoft.com/dotnet/runtime:10.0 AS runtime
 WORKDIR /app
 
 # Create a non-root user for security hardening.

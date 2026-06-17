@@ -78,7 +78,7 @@ public sealed class ServiceBusTools : IAsyncDisposable
                 _logger.LogInformation("Sending message to entity {Entity}", entity);
                 await sender.SendMessageAsync(message, cancellationToken);
 
-                return McpToolResult.Success(new
+                return McpToolResult.Success<object>(new
                 {
                     sent = true,
                     entity,
@@ -127,7 +127,7 @@ public sealed class ServiceBusTools : IAsyncDisposable
                     applicationProperties = m.ApplicationProperties,
                 }).ToList();
 
-                return McpToolResult.Success(new { count = result.Count, messages = result });
+                return McpToolResult.Success<object>(new { count = result.Count, messages = result });
             },
             cancellationToken);
     }
@@ -177,11 +177,10 @@ public sealed class ServiceBusTools : IAsyncDisposable
     /// The message must first be received in PeekLock mode before it can be dead-lettered.
     /// </summary>
     [McpServerTool(Name = "dead_letter_message")]
-    [Description("Moves the message identified by the given lock token to the dead-letter sub-queue. Requires the message to have been received in PeekLock mode. Provide the lockToken returned by a PeekLock receive operation.")]
+    [Description("Receives the next available message from a Service Bus queue and moves it to the dead-letter sub-queue with an optional reason. Returns the dead-lettered message details or null if the queue is empty.")]
     public async Task<string> DeadLetterMessageAsync(
-        [Description("The queue or subscription name. Defaults to the configured default entity.")] string? entityName = null,
-        [Description("The lock token of the message to dead-letter (obtained from a PeekLock receive)")] string? lockToken = null,
-        [Description("Human-readable reason for dead-lettering")] string? reason = null,
+        [Description("The queue name. Defaults to the configured default entity.")] string? entityName = null,
+        [Description("Human-readable reason for dead-lettering (e.g. 'PoisonMessage', 'ProcessingFailed')")] string? reason = null,
         [Description("Additional error description")] string? errorDescription = null,
         CancellationToken cancellationToken = default)
     {
@@ -189,31 +188,29 @@ public sealed class ServiceBusTools : IAsyncDisposable
             nameof(DeadLetterMessageAsync),
             async () =>
             {
-                if (string.IsNullOrWhiteSpace(lockToken))
+                var entity = entityName ?? _options.DefaultEntityName;
+                await using var receiver = _client.CreateReceiver(
+                    entity,
+                    new ServiceBusReceiverOptions { ReceiveMode = ServiceBusReceiveMode.PeekLock });
+
+                _logger.LogInformation("Receiving message to dead-letter from {Entity}", entity);
+                var message = await receiver.ReceiveMessageAsync(_options.MaxWaitTime, cancellationToken);
+
+                if (message is null)
                 {
-                    return McpToolResult.Failure<object>(
-                        "lockToken is required to dead-letter a message. Receive the message in PeekLock mode first.",
-                        "MissingParameter");
+                    return McpToolResult.Success<object>(new { deadLettered = false, entity, reason = "NoMessageAvailable" });
                 }
 
-                var entity = entityName ?? _options.DefaultEntityName;
-                await using var receiver = _client.CreateReceiver(entity);
-
-                _logger.LogInformation(
-                    "Dead-lettering message with lock token {LockToken} from {Entity}", lockToken, entity);
-
-                await receiver.DeadLetterMessageAsync(
-                    new ServiceBusReceivedMessage(),
-                    reason,
-                    errorDescription,
-                    cancellationToken);
+                await receiver.DeadLetterMessageAsync(message, reason, errorDescription, cancellationToken);
 
                 return McpToolResult.Success<object>(new
                 {
                     deadLettered = true,
                     entity,
-                    lockToken,
-                    reason,
+                    messageId = message.MessageId,
+                    sequenceNumber = message.SequenceNumber,
+                    subject = message.Subject,
+                    deadLetterReason = reason,
                 });
             },
             cancellationToken);

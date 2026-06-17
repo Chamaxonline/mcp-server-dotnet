@@ -131,7 +131,6 @@ public sealed class TeamsTools
                     createdDateTime = m.CreatedDateTime,
                     lastModifiedDateTime = m.LastModifiedDateTime,
                     author = m.From?.User?.DisplayName ?? m.From?.Application?.DisplayName,
-                    authorEmail = m.From?.User?.UserIdentityType?.ToString(),
                     body = m.Body?.Content,
                     bodyType = m.Body?.ContentType?.ToString(),
                     importance = m.Importance?.ToString(),
