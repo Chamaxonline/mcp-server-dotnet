@@ -74,7 +74,8 @@ jobs:
 
       - name: Build Docker image (${{ matrix.server }})
         run: |
+          server_lower=$(echo "${{ matrix.server }}" | tr '[:upper:]' '[:lower:]')
           docker build \
             -f src/servers/${{ matrix.server }}/Dockerfile \
-            -t mcp-${{ matrix.server }}:ci \
+            -t mcp-${server_lower}:ci \
             .
