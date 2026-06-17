@@ -24,7 +24,7 @@ FROM mcr.microsoft.com/dotnet/runtime:10.0 AS runtime
 WORKDIR /app
 
 # Create a non-root user for security hardening.
-RUN addgroup --system mcp && adduser --system --ingroup mcp mcp
+RUN groupadd --system mcp && useradd --system --gid mcp --no-create-home mcp
 USER mcp
 
 COPY --from=build /app/publish .

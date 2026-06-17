@@ -19,7 +19,7 @@ RUN dotnet publish src/servers/MicrosoftGraph/MicrosoftGraph.csproj \
 FROM mcr.microsoft.com/dotnet/runtime:10.0 AS runtime
 WORKDIR /app
 
-RUN addgroup --system mcp && adduser --system --ingroup mcp mcp
+RUN groupadd --system mcp && useradd --system --gid mcp --no-create-home mcp
 USER mcp
 
 COPY --from=build /app/publish .
