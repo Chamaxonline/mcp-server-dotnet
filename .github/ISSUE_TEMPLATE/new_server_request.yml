@@ -1,0 +1,82 @@
+name: New Server Request
+description: Request a new MCP server for a service not yet covered
+labels: ["enhancement", "new-server"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing, please check the [Server Directory](../../README.md#server-directory)
+        to make sure the server doesn't already exist.
+
+  - type: input
+    id: service-name
+    attributes:
+      label: Service Name
+      description: The name of the Azure or developer-ecosystem service.
+      placeholder: "Azure Blob Storage"
+    validations:
+      required: true
+
+  - type: input
+    id: service-url
+    attributes:
+      label: Service Documentation URL
+      placeholder: "https://docs.microsoft.com/azure/storage/blobs/"
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: |
+        Describe the scenario(s) where an AI assistant would benefit from
+        access to this service via MCP.
+      placeholder: |
+        "I want Claude to be able to list blobs in a container, download a
+        blob's content, and upload files for me during a conversation."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-tools
+    attributes:
+      label: Proposed Tools
+      description: List the operations you'd like exposed as MCP tools.
+      placeholder: |
+        - list_blobs — list blobs in a container
+        - get_blob — download a blob's content as text
+        - upload_blob — upload content to a new blob
+        - delete_blob — delete a blob by name
+    validations:
+      required: true
+
+  - type: dropdown
+    id: auth-type
+    attributes:
+      label: Authentication Type
+      description: How does the service authenticate?
+      options:
+        - Azure AD / DefaultAzureCredential
+        - Connection String / API Key
+        - OAuth 2.0 (non-Azure)
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: willing-to-contribute
+    attributes:
+      label: Are you willing to implement this?
+      options:
+        - "Yes — I will open a PR"
+        - "Maybe — with guidance"
+        - "No — requesting someone else implements it"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other relevant details, links, or examples.

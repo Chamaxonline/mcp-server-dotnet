@@ -1,0 +1,123 @@
+name: Bug Report
+description: Report a bug in an existing MCP server
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill out the form below.
+        **Do not include secrets or API keys in this report.**
+
+  - type: dropdown
+    id: server
+    attributes:
+      label: Affected Server
+      description: Which MCP server is exhibiting the bug?
+      options:
+        - McpServerDotnet.Core (shared library)
+        - AzureDevOps
+        - ServiceBus
+        - CosmosDb
+        - MicrosoftGraph
+        - Other / Unknown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tool
+    attributes:
+      label: Affected Tool (if applicable)
+      description: Which MCP tool triggers the bug?
+      options:
+        - N/A — startup/config issue
+        - get_work_item
+        - create_work_item
+        - update_work_item
+        - list_pull_requests
+        - get_pull_request
+        - create_pull_request
+        - list_pipelines
+        - get_pipeline_run
+        - trigger_pipeline
+        - send_message
+        - peek_messages
+        - receive_and_delete_message
+        - dead_letter_message
+        - query_documents
+        - get_document
+        - upsert_document
+        - delete_document
+        - list_databases
+        - get_calendar_events
+        - get_calendar_event
+        - list_calendars
+        - list_mail_messages
+        - get_mail_message
+        - send_mail_message
+        - list_teams
+        - list_channels
+        - list_channel_messages
+        - send_channel_message
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of what the bug is.
+      placeholder: "When I call get_work_item with id 123, it returns..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How can we reproduce the issue?
+      placeholder: |
+        1. Configure the server with...
+        2. Call tool get_work_item with parameters...
+        3. Observe error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behaviour
+      placeholder: "Should return the work item fields as JSON."
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behaviour
+      placeholder: "Returns an error: ..."
+    validations:
+      required: true
+
+  - type: input
+    id: dotnet-version
+    attributes:
+      label: .NET SDK Version
+      description: Output of `dotnet --version`
+      placeholder: "9.0.100"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: auth-mode
+    attributes:
+      label: Authentication Mode
+      options:
+        - ManagedIdentity (DefaultAzureCredential)
+        - ApiKey / PAT
+        - AzureCli
+        - Other
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Log Output
+      description: Paste relevant stderr output (redact any credentials).
+      render: text

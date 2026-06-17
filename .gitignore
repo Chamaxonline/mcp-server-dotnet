@@ -1,0 +1,41 @@
+## .NET / Visual Studio
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+_ReSharper*/
+*.DotSettings.user
+TestResults/
+[Pp]ublish/
+artifacts/
+packages/
+*.nupkg
+*.snupkg
+
+## Logs
+logs/
+*.log
+Serilog/
+
+## Secrets & environment
+appsettings.local.json
+appsettings.*.local.json
+.env
+.env.*
+secrets.json
+**/UserSecrets/
+
+## Docker
+.dockerignore
+
+## IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
