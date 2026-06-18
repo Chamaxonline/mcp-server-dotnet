@@ -4,6 +4,8 @@ WORKDIR /src
 
 # Copy solution and project files first to leverage Docker layer caching.
 COPY mcp-server-dotnet.sln ./
+COPY Directory.Build.props ./
+COPY global.json ./
 COPY src/McpServerDotnet.Core/McpServerDotnet.Core.csproj src/McpServerDotnet.Core/
 COPY src/servers/AzureDevOps/AzureDevOps.csproj src/servers/AzureDevOps/
 

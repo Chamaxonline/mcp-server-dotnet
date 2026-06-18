@@ -2,6 +2,8 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 COPY mcp-server-dotnet.sln ./
+COPY Directory.Build.props ./
+COPY global.json ./
 COPY src/McpServerDotnet.Core/McpServerDotnet.Core.csproj src/McpServerDotnet.Core/
 COPY src/servers/CosmosDb/CosmosDb.csproj src/servers/CosmosDb/
 
